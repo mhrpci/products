@@ -284,6 +284,21 @@
                 right: 0.5rem;
             }
         }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .scroll-animation {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .scroll-animation.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -458,7 +473,7 @@
                 
                 products[category].forEach(product => {
                     const card = document.createElement('div');
-                    card.className = 'product-card';
+                    card.className = 'product-card scroll-animation';
                     
                     // Limit description to 100 characters and add ellipsis if needed
                     const truncatedDescription = product.description.length > 100 
@@ -528,8 +543,26 @@
             }
         }
 
+        // Add this new function for scroll animation
+        function handleScrollAnimation() {
+            const elements = document.querySelectorAll('.scroll-animation');
+            const windowHeight = window.innerHeight;
+
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                if (elementPosition < windowHeight - 100) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
         // Initialize the page
         createProductCards();
+        
+        // Add scroll event listener
+        window.addEventListener('scroll', handleScrollAnimation);
+        // Trigger initial check
+        handleScrollAnimation();
     </script>
 </body>
 </html>
